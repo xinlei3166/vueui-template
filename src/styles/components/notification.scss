@@ -1,0 +1,35 @@
+.alert {
+  position: fixed;
+  width: 100%;
+  top: 16px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.alert-content {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+  margin-bottom: 8px;
+}
+
+.alert-main {
+  transition: all 1s;
+}
+
+/*.list-enter-active, .list-leave-active {*/
+/*  transition: all 1s;*/
+/*}*/
+
+.list-leave-active {
+  position: absolute;
+}
+
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(-100%);
+}

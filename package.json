@@ -1,0 +1,65 @@
+{
+  "name": "xlui-dev",
+  "version": "0.1.0",
+  "description": "",
+  "author": "junxi",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xinlei3166/xlui.git"
+  },
+  "keywords": [
+    "ui",
+    "vue",
+    "framework",
+    "xlui"
+  ],
+  "bugs": {
+    "url": "https://github.com/xinlei3166/xlui/issues"
+  },
+  "homepage": "https://github.com/xinlei3166/xlui#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rollup -w -c scripts/config.js -environment FORMAT:cjs",
+    "build": "npm run clean && run-p build:*",
+    "build:cjs": "rollup -c scripts/rollup.config.js --environment FORMAT:cjs",
+    "build:es": "rollup -c scripts/rollup.config.js --environment FORMAT:es",
+    "build:umd": "rollup -c scripts/rollup.config.js --environment FORMAT:umd",
+    "build:style": "gulp --gulpfile scripts/build-style.js",
+    "clean": "rm -rf lib es dist",
+    "deploy": "git push origin --tags && npm run build && npm publish"
+  },
+  "dependencies": {
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@rollup/plugin-alias": "^3.1.1",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@rollup/plugin-replace": "^2.3.3",
+    "chalk": "^4.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-header": "^2.0.9",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "jest": "^26.1.0",
+    "node-sass": "^4.14.1",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.22.1",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-vue": "^5.1.9",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.3",
+    "vue-template-compiler": "^2.6.12"
+  }
+}
