@@ -10,11 +10,13 @@ import replace from '@rollup/plugin-replace'
 import vue from 'rollup-plugin-vue'
 import {terser} from 'rollup-plugin-terser'
 
-const moduleName = 'xlui'
-const version = process.env.VERSION || require('../package.json').version
+const pkg = require('../package.json')
+const moduleName = pkg.name
+const version = process.env.VERSION || pkg.version
+
 const banner =
   '/**\n' +
-  ` * ${moduleName}.js v${version}\n` +
+  ` * ${moduleName} v${version}\n` +
   ` * (c) 2020-${new Date().getFullYear()} 君惜\n` +
   ' * Released under the ISC License.\n' +
   ' */'
@@ -22,7 +24,7 @@ const banner =
 const resolve = dir => path.resolve(__dirname, '../', dir)
 const entry = 'src/index.js' // entry relative path
 const cPath = 'src/components' // components relative path
-const external = Object.keys(require('../package.json').dependencies)
+const external = Object.keys(pkg.dependencies)
 
 // gen config template
 function gen(options) {

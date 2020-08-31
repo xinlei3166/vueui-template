@@ -9,11 +9,12 @@ const header = require('gulp-header')
 const autoprefixer = require('gulp-autoprefixer')
 
 const pkg = require('../package.json')
-const moduleName = 'xlui'
+const moduleName = pkg.name
+const version = pkg.version
 
 const banner =
   '/**\n' +
-  ` * ${moduleName}.js v${pkg.version}\n` +
+  ` * ${moduleName} v${version}\n` +
   ` * (c) 2020-${new Date().getFullYear()} 君惜\n` +
   ' * Released under the ISC License.\n' +
   ' */\n'
