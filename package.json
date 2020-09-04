@@ -29,7 +29,25 @@
     "build:umd": "rollup -c scripts/rollup.config.js --environment FORMAT:umd",
     "build:style": "gulp --gulpfile scripts/build-style.js",
     "clean": "rm -rf lib es dist",
-    "deploy": "git push origin --tags && npm run build && npm publish"
+    "deploy": "git push origin --tags && npm run build && npm publish",
+    "preinstall": "node ./scripts/check-yarn.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "node scripts/verify-commit.js"
+    }
+  },
+  "lint-staged": {
+    "*.vue": [
+      "prettier --write"
+    ],
+    "*.js?(x)": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
   },
   "dependencies": {
     "vue": "^2.6.10"
@@ -52,9 +70,12 @@
     "gulp-header": "^2.0.9",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
+    "husky": "^4.2.5",
     "jest": "^26.1.0",
+    "lint-staged": "^10.3.0",
     "node-sass": "^4.14.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.1",
     "rollup": "^2.22.1",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-vue": "^5.1.9",
