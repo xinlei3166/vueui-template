@@ -8,7 +8,7 @@
   "module": "es/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xinlei3166/xlui.git"
+    "url": "git+https://github.com/xinlei3166/xlui-template.git"
   },
   "keywords": [
     "ui",
@@ -17,9 +17,9 @@
     "xlui"
   ],
   "bugs": {
-    "url": "https://github.com/xinlei3166/xlui/issues"
+    "url": "https://github.com/xinlei3166/xlui-template/issues"
   },
-  "homepage": "https://github.com/xinlei3166/xlui#readme",
+  "homepage": "https://github.com/xinlei3166/xlui-template#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -w -c scripts/config.js -environment FORMAT:cjs",
