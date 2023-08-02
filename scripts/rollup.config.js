@@ -1,30 +1,30 @@
-const path = require('path')
-const fs = require('fs')
-import buble from '@rollup/plugin-buble'
-import commonjs from '@rollup/plugin-commonjs'
-import node from '@rollup/plugin-node-resolve'
-import babel from '@rollup/plugin-babel'
-import json from '@rollup/plugin-json'
+const path = require("path");
+const fs = require("fs");
+import buble from "@rollup/plugin-buble";
+import commonjs from "@rollup/plugin-commonjs";
+import node from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
+import json from "@rollup/plugin-json";
 // import alias from '@rollup/plugin-alias'
-import replace from '@rollup/plugin-replace'
-import vue from 'rollup-plugin-vue'
-import {terser} from 'rollup-plugin-terser'
+import replace from "@rollup/plugin-replace";
+import vue from "rollup-plugin-vue";
+import { terser } from "rollup-plugin-terser";
 
-const pkg = require('../package.json')
-const moduleName = pkg.name
-const version = process.env.VERSION || pkg.version
+const pkg = require("../package.json");
+const moduleName = pkg.name;
+const version = process.env.VERSION || pkg.version;
 
 const banner =
-  '/**\n' +
+  "/**\n" +
   ` * ${moduleName} v${version}\n` +
   ` * (c) 2020-${new Date().getFullYear()} 君惜\n` +
-  ' * Released under the ISC License.\n' +
-  ' */'
+  " * Released under the MIT License.\n" +
+  " */";
 
-const resolve = dir => path.resolve(__dirname, '../', dir)
-const entry = 'src/index.js' // entry relative path
-const cPath = 'src/components' // components relative path
-const external = Object.keys(pkg.dependencies)
+const resolve = (dir) => path.resolve(__dirname, "../", dir);
+const entry = "src/index.js"; // entry relative path
+const cPath = "src/components"; // components relative path
+const external = Object.keys(pkg.dependencies);
 
 // gen config template
 function gen(options) {
@@ -36,36 +36,42 @@ function gen(options) {
     env: options.env,
     plugins: [node(), commonjs(), json(), vue()].concat(options.plugins || []),
     external,
-    banner
-  }
+    banner,
+  };
 }
 
 function gencjs(entry, dest) {
   // return gen({entry, dest, format: 'cjs', env: 'production', exports: 'default'})
-  return gen({entry, dest, format: 'cjs', env: 'production'})
+  return gen({ entry, dest, format: "cjs", env: "production" });
 }
 
 function genes(entry, dest) {
-  return gen({entry, dest, format: 'es', env: 'production'})
+  return gen({ entry, dest, format: "es", env: "production" });
 }
 
 function genumd(entry, dest) {
   return gen({
-    entry, dest, format: 'umd', env: 'production', plugins: [
-      babel({babelHelpers: 'bundled', exclude: 'node_modules/**'}),
-    ]
-  })
+    entry,
+    dest,
+    format: "umd",
+    env: "production",
+    plugins: [babel({ babelHelpers: "bundled", exclude: "node_modules/**" })],
+  });
 }
 
 function genmin(entry, dest) {
   return gen({
-    entry, dest, format: 'umd', env: 'production', plugins: [
-      babel({babelHelpers: 'bundled', exclude: 'node_modules/**'}),
-      terser()
+    entry,
+    dest,
+    format: "umd",
+    env: "production",
+    plugins: [
+      babel({ babelHelpers: "bundled", exclude: "node_modules/**" }),
+      terser(),
       // babel({ babelHelpers: 'runtime', exclude: 'node_modules/**' })
     ],
-    sourcemap: true
-  })
+    sourcemap: true,
+  });
 }
 
 // gen complete config
@@ -77,43 +83,45 @@ function genConfig(opts) {
     output: {
       file: opts.dest,
       format: opts.format,
-      exports: opts.exports ? opts.exports : 'auto',
+      exports: opts.exports ? opts.exports : "auto",
       banner: opts.banner,
       name: opts.moduleName || moduleName,
       sourcemap: opts.sourcemap || false,
     },
     onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {
-        warn(msg)
+        warn(msg);
       }
-    }
-  }
+    },
+  };
 
-  const vars = {}
+  const vars = {};
 
   if (opts.env) {
-    vars['process.env.NODE_ENV'] = JSON.stringify(opts.env)
+    vars["process.env.NODE_ENV"] = JSON.stringify(opts.env);
   }
-  config.plugins.push(replace(vars))
+  config.plugins.push(replace(vars));
 
   if (opts.transpile !== false) {
-    config.plugins.push(buble({
-      objectAssign: 'Object.assign',
-      transforms: {
-        arrow: true,
-        dangerousForOf: true,
-        asyncAwait: false,
-        generator: false
-      }
-    }))
+    config.plugins.push(
+      buble({
+        objectAssign: "Object.assign",
+        transforms: {
+          arrow: true,
+          dangerousForOf: true,
+          asyncAwait: false,
+          generator: false,
+        },
+      })
+    );
   }
 
-  Object.defineProperty(config, '_format', {
+  Object.defineProperty(config, "_format", {
     enumerable: false,
-    value: opts.format
-  })
+    value: opts.format,
+  });
 
-  return config
+  return config;
 }
 
 // entry builds
@@ -122,42 +130,43 @@ const builds = {
   es: genConfig(genes(entry, `es/index.js`)), // build entry es
   umd: genConfig(genumd(entry, `dist/${moduleName}.js`)), // build entry umd
   min: genConfig(genmin(entry, `dist/${moduleName}.min.js`)), // build entry umd terser
-}
+};
 
 // components builds
 const componentsBuilds = {
-  cjs: dirs => {
-    return dirs.map(dir => { // components cjs
-      const opts = gencjs(`${cPath}/${dir}/index.js`, `lib/${dir}/index.js`)
-      return genConfig(opts)
-    })
+  cjs: (dirs) => {
+    return dirs.map((dir) => {
+      // components cjs
+      const opts = gencjs(`${cPath}/${dir}/index.js`, `lib/${dir}/index.js`);
+      return genConfig(opts);
+    });
   },
-  es: dirs => {
-    return dirs.map(dir => { // components es
-      const opts = genes(`${cPath}/${dir}/index.js`, `es/${dir}/index.js`)
-      return genConfig(opts)
-    })
-  }
-}
+  es: (dirs) => {
+    return dirs.map((dir) => {
+      // components es
+      const opts = genes(`${cPath}/${dir}/index.js`, `es/${dir}/index.js`);
+      return genConfig(opts);
+    });
+  },
+};
 
 // gen complete rollup configs
 function genConfigs(format) {
-  let configs
-  switch (format){
-    case 'umd':
-      configs = [builds[format], builds['min']]
-      break
+  let configs;
+  switch (format) {
+    case "umd":
+      configs = [builds[format], builds["min"]];
+      break;
     default:
-      const dirs = fs.readdirSync(resolve(cPath)).filter(dir => fs.statSync(`${cPath}/${dir}`).isDirectory())
-      const cb = componentsBuilds[format]
-      configs = [
-        builds[format],
-        ...cb(dirs)
-      ]
+      const dirs = fs
+        .readdirSync(resolve(cPath))
+        .filter((dir) => fs.statSync(`${cPath}/${dir}`).isDirectory());
+      const cb = componentsBuilds[format];
+      configs = [builds[format], ...cb(dirs)];
   }
-  return configs
+  return configs;
 }
 
-const format = process.env.FORMAT || 'cjs'
+const format = process.env.FORMAT || "cjs";
 
-export default genConfigs(format)
+export default genConfigs(format);
